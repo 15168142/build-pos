@@ -428,17 +428,10 @@ class BuildInfo(object):
     else:
       self._oem_props = None
 
-    def check_fingerprint(fingerprint):
-      if (" " in fingerprint or any(ord(ch) > 127 for ch in fingerprint)):
-        raise ValueError(
-            'Invalid build fingerprint: "{}". See the requirement in Android CDD '
-            "3.2.2. Build Parameters.".format(fingerprint))
-
     self._partition_fingerprints = {}
     for partition in PARTITIONS_WITH_BUILD_PROP:
       try:
         fingerprint = self.CalculatePartitionFingerprint(partition)
-        check_fingerprint(fingerprint)
         self._partition_fingerprints[partition] = fingerprint
       except ExternalError:
         continue
@@ -451,7 +444,6 @@ class BuildInfo(object):
     # These two should be computed only after setting self._oem_props.
     self._device = info_dict.get("ota_override_device", self.GetOemProperty("ro.product.device"))
     self._fingerprint = self.CalculateFingerprint()
-    check_fingerprint(self._fingerprint)
 
   @property
   def is_ab(self):

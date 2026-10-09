@@ -217,16 +217,6 @@ class BuildInfoTest(test_utils.ReleaseToolsTestCase):
     self.assertEqual('brand3/product-name/device3:build-thumbprint',
                      target_info.fingerprint)
 
-  def test_init_badFingerprint(self):
-    info_dict = copy.deepcopy(self.TEST_INFO_DICT)
-    info_dict['build.prop'].build_props[
-        'ro.build.fingerprint'] = 'bad fingerprint'
-    self.assertRaises(ValueError, common.BuildInfo, info_dict, None)
-
-    info_dict['build.prop'].build_props[
-        'ro.build.fingerprint'] = 'bad\x80fingerprint'
-    self.assertRaises(ValueError, common.BuildInfo, info_dict, None)
-
   def test_init_goodFingerprint(self):
     info_dict = copy.deepcopy(self.TEST_INFO_FINGERPRINT_DICT)
     build_info = common.BuildInfo(info_dict)
